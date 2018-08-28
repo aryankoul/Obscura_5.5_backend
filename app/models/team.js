@@ -77,6 +77,18 @@ const TeamSchema = new mongoose.Schema({
       },
     }],
   },
+  timeline: {
+    type: [{
+      level_no: {
+        type: Number,
+      },
+      cleared_at: {
+        type: Date,
+        default: new Date(),
+      },
+    },
+    ],
+  },
 });
 
 export default mongoose.model('Team', TeamSchema);

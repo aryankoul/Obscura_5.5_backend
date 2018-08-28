@@ -378,6 +378,22 @@ router.post('/:alias', (req, res) => {
             if (err) {
               return callback(err, null);
             }
+            if (newLevelNo > req.level.level_no) {
+              Team.update({
+                'players._id': req.user._id,
+              }, {
+                $push: {
+                  timeline: {
+                    level_no: teamLevelNo,
+                  },
+                },
+              },
+              (err, team) => {
+                if (err) {
+                  return callback(err, null);
+                }
+              });
+            }
             return callback(null, {
               newLevelNo,
               newSubLevelNo,
