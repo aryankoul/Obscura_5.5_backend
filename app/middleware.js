@@ -5,11 +5,13 @@ import expressSession from 'express-session';
 import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
+import rateLimit from 'express-rate-limit';
 import CsrfMiddleware from './global/middlewares/csrfMidlleware';
 import EmptyContentMiddleware from './global/middlewares/EmptyContent';
 import ContentTypeMiddleware from './global/middlewares/ContentType';
 import configServer from '../config';
 import { stream } from '../log';
+
 
 const middleware = (app) => {
   app.use(passport.initialize());
@@ -25,6 +27,15 @@ const middleware = (app) => {
   app.use(helmet.xssFilter()); // set X-XSS-Protection header
 
   app.enable('trust proxy', ['loopback', 'linklocal', 'uniquelocal']);
+
+  const limiter = rateLimit({
+    windowMs: 60 * 1000,
+    max: 5,
+    message: 'Too many requests made. Please try again later.',
+  });
+
+  app.use(limiter);
+
   app.use(expressSession({
     name: 'SESS_ID',
     secret: configServer.app.SESSION_SECRET,

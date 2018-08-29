@@ -155,6 +155,7 @@ router.get('/:id', (req, res) => {
  *         description: Unauthorized request
  */
 router.put('/:id', (req, res) => {
+  if (req.body.onboard === true) return ('onboard done', null);
   const playerId = req.user._id;
   const data = req.body;
   data.onboard = true;
